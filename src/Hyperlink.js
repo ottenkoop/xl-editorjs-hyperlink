@@ -1,8 +1,7 @@
 import SelectionUtils from "./SelectionUtils";
 import css from './Hyperlink.css';
 
-export default class Hyperlink {
-
+export default class XLHyperlink {
     constructor({ data, config, api, readOnly }) {
         this.toolbar = api.toolbar;
         this.inlineToolbar = api.inlineToolbar;
@@ -25,9 +24,15 @@ export default class Hyperlink {
             buttonSave: 'ce-inline-tool-hyperlink--button',
         };
 
-        this.targetAttributes = this.config.availableTargets || [
-            'Open in new tab',   // Opens the linked document in a new window or tab
-            'Stay on current tab',    // Opens the linked document in the same frame as it was clicked (this is default)
+        this.targetAttributes = [
+            {
+                label: 'Stay on current tab',
+                value: '_self'
+            },
+            {
+                label: 'Open link in new tab',
+                value: '_blank'
+            }
         ];
 
         this.nodes = {
@@ -64,9 +69,9 @@ export default class Hyperlink {
         // Target
         this.nodes.selectTarget = document.createElement('select');
         this.nodes.selectTarget.classList.add(this.CSS.selectTarget);
-        this.addOption(this.nodes.selectTarget, this.i18n.t('Select target'), '');
+
         for (i=0; i<this.targetAttributes.length; i++) {
-            this.addOption(this.nodes.selectTarget, this.targetAttributes[i], this.targetAttributes[i]);
+            this.addOption(this.nodes.selectTarget, this.targetAttributes[i].label, this.targetAttributes[i].value);
         }
 
         if(!!this.config.target) {
@@ -91,10 +96,6 @@ export default class Hyperlink {
 
         if(!!this.targetAttributes && this.targetAttributes.length > 0) {
             this.nodes.wrapper.appendChild(this.nodes.selectTarget);
-        }
-
-        if(!!this.relAttributes && this.relAttributes.length > 0) {
-            this.nodes.wrapper.appendChild(this.nodes.selectRel);
         }
 
         this.nodes.wrapper.appendChild(this.nodes.buttonSave);
@@ -140,8 +141,7 @@ export default class Hyperlink {
         return {
             a: {
                 href: true,
-                target: true,
-                rel: true,
+                target: true
             },
         };
     }
@@ -154,10 +154,8 @@ export default class Hyperlink {
             this.openActions();
             const hrefAttr = anchorTag.getAttribute('href');
             const targetAttr = anchorTag.getAttribute('target');
-            const relAttr = anchorTag.getAttribute('rel');
             this.nodes.input.value = !!hrefAttr ? hrefAttr : '';
             this.nodes.selectTarget.value = !!targetAttr ? targetAttr : '';
-            this.nodes.selectRel.value = !!relAttr ? relAttr : '';
             this.selection.save();
         } else {
             this.nodes.button.classList.remove(this.CSS.buttonUnlink);
@@ -197,7 +195,6 @@ export default class Hyperlink {
         this.nodes.wrapper.classList.remove(this.CSS.wrapperShowed);
         this.nodes.input.value = '';
         this.nodes.selectTarget.value = '';
-        this.nodes.selectRel.value = '';
 
         if (clearSavedSelection) {
             this.selection.clearSaved();
@@ -212,7 +209,6 @@ export default class Hyperlink {
 
         let value = this.nodes.input.value || '';
         let target = this.nodes.selectTarget.value || '';
-        let rel = this.nodes.selectRel.value || '';
 
         if (!value.trim()) {
             this.selection.restore();
@@ -236,7 +232,7 @@ export default class Hyperlink {
         this.selection.restore();
         this.selection.removeFakeBackground();
 
-        this.insertLink(value, target, rel);
+        this.insertLink(value, target);
 
         this.selection.collapseToEnd();
         this.inlineToolbar.close();
@@ -274,7 +270,7 @@ export default class Hyperlink {
         return link;
     }
 
-    insertLink(link, target='', rel='') {
+    insertLink(link, target='') {
         let anchorTag = this.selection.findParentTag('A');
         if (anchorTag) {
             this.selection.expandToTag(anchorTag);
@@ -282,16 +278,12 @@ export default class Hyperlink {
             document.execCommand(this.commandLink, false, link);
             anchorTag = this.selection.findParentTag('A');
         }
+
         if(anchorTag) {
             if(!!target) {
                 anchorTag['target'] = target;
             }else{
                 anchorTag.removeAttribute('target');
-            }
-            if(!!rel) {
-                anchorTag['rel'] = rel;
-            }else{
-                anchorTag.removeAttribute('rel');
             }
         }
     }

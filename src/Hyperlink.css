@@ -13,6 +13,10 @@
     border-top: 1px solid rgba(201,201,204,.48);
 }
 
+.ce-inline-tool-input.ce-inline-tool-input--showed {
+    display: none;
+}
+
 .ce-inline-tool-hyperlink-wrapper.ce-inline-tool-hyperlink-wrapper--showed {
     display: block;
 }
@@ -32,11 +36,11 @@
     box-sizing: border-box;
 }
 
-.ce-inline-tool-hyperlink--select-target,
-.ce-inline-tool-hyperlink--select-rel {
-    width: 48%;
+.ce-inline-tool-hyperlink--select-target {
+    width: 100%;
     display: inline-block;
 }
+
 .ce-inline-tool-hyperlink--select-target {
     margin-right: 2%;
 }

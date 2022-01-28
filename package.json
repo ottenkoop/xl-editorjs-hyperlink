@@ -1,6 +1,6 @@
 {
   "name": "xl-editorjs-hyperlink",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Link with target for Editor.js",
   "main": "./dist/bundle.js",
   "scripts": {
