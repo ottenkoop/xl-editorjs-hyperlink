@@ -26,10 +26,6 @@ export default class XLHyperlink {
 
         this.targetAttributes = [
             {
-                label: 'Stay on current tab',
-                value: '_self'
-            },
-            {
                 label: 'Open link in new tab',
                 value: '_blank'
             }
@@ -69,17 +65,9 @@ export default class XLHyperlink {
         // Target
         this.nodes.selectTarget = document.createElement('select');
         this.nodes.selectTarget.classList.add(this.CSS.selectTarget);
-
+        this.addOption(this.nodes.selectTarget, this.i18n.t('Stay on current page'), '');
         for (i=0; i<this.targetAttributes.length; i++) {
             this.addOption(this.nodes.selectTarget, this.targetAttributes[i].label, this.targetAttributes[i].value);
-        }
-
-        if(!!this.config.target) {
-            if(this.targetAttributes.length === 0) {
-                this.addOption(this.nodes.selectTarget, this.config.target, this.config.target);
-            }
-
-            this.nodes.selectTarget.value = this.config.target;
         }
 
         // Button

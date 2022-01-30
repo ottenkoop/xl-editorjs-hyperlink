@@ -17,6 +17,10 @@
     display: none;
 }
 
+.ce-inline-toolbar.ce-inline-toolbar--showed {
+    min-width: 300px;
+}
+
 .ce-inline-tool-hyperlink-wrapper.ce-inline-tool-hyperlink-wrapper--showed {
     display: block;
 }
